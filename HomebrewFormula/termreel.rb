@@ -1,19 +1,13 @@
-# termreel Homebrew formula — UNPUBLISHED / HELD FOR CEO "GO".
-#
-# Canonical home will be a custom tap: deemwar-products/homebrew-tap
-#   (i.e. `brew install deemwar-products/tap/termreel` once published).
-# This copy lives inside the repo at HomebrewFormula/termreel.rb as a stopgap so it
-# can be style-checked, audited, and installed LOCALLY without implying a live tap.
+# termreel — narrated, captioned terminal demos from a tiny script.
 #
 # Approach: standalone compiled binary. Bun is a BUILD-ONLY dependency — we compile
 # bin/termreel.ts into a self-contained `termreel` executable, so the installed tool
-# needs no Bun (or Node) at runtime. The `url`/`sha256` below point at a LOCAL tarball
-# for verification; the publish step swaps them for the GitHub release artifact.
+# needs no Bun (or Node) at runtime.
 class Termreel < Formula
   desc "Add narration and captions to silent terminal recordings"
   homepage "https://github.com/deemwar-products/termreel"
-  url "file:///tmp/termreel-0.1.0.tar.gz"
-  sha256 "fe151a19c4a4e14e67190acf17de2bfb8c2f35a7629ea808eb2051cf12a7f938"
+  url "https://github.com/deemwar-products/termreel/archive/refs/tags/v0.1.0.tar.gz"
+  sha256 "68be8f3fefc61bb470262fda6e11b404fdec4ab218740ddc22d925da360baf9d"
   license "MIT"
 
   depends_on "bun" => :build

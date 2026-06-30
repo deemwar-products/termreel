@@ -78,7 +78,7 @@ chore.
 **Homebrew** — a self-contained binary, no Bun needed at runtime:
 
 ```sh
-brew install deemwar-products/tap/termreel
+brew install deemwar-products/oss/termreel
 ```
 
 **npm or Bun** — the CLI runs on Bun, so Bun must be installed:
