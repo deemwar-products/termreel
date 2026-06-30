@@ -1,0 +1,18 @@
+# hello.reel — the smallest narrated, captioned terminal demo.
+# Render it:  termreel build examples/hello.reel
+
+name: hello
+title: Hello, termreel.
+subtitle: a narrated terminal demo
+intro: Here is the smallest possible termreel.
+
+run: echo "hello, world"
+say: We start with a friendly greeting.
+caption: echo writes to standard output
+
+run: ls
+say: Then we list the current directory.
+caption: ls — what's here
+
+outro: That's termreel.
+outroSay: Narrated, captioned terminal demos. Find us at deemwar dot com.

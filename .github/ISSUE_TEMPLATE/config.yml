@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Security issue (please do NOT open a public issue)
+    url: https://deemwar.com/contact
+    about: These tools handle secrets — report vulnerabilities privately. See SECURITY.md.
+  - name: Questions / using this for your team
+    url: https://deemwar.com/contact
+    about: Talk to the deemwar team.

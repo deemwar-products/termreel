@@ -1,0 +1,39 @@
+{
+  "name": "@deemwar-products/termreel",
+  "version": "0.1.0",
+  "description": "Narrated, captioned terminal demos. asciinema/VHS record a silent terminal; termreel adds the voice and the captions.",
+  "type": "module",
+  "bin": {
+    "termreel": "bin/termreel.ts"
+  },
+  "scripts": {
+    "test": "bun test"
+  },
+  "keywords": [
+    "terminal",
+    "demo",
+    "asciinema",
+    "vhs",
+    "screencast",
+    "narration",
+    "captions",
+    "voiceover",
+    "devtools"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/deemwar-products/termreel"
+  },
+  "homepage": "https://github.com/deemwar-products/termreel",
+  "engines": {
+    "bun": ">=1.1.0"
+  },
+  "files": [
+    "bin",
+    "src",
+    "examples",
+    "README.md",
+    "LICENSE"
+  ]
+}

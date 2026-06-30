@@ -1,0 +1,23 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    name: bun test + dogfood
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+      - name: Tests
+        run: bun test
+      - name: Dogfood (runs the CLI end-to-end)
+        run: |
+          bun bin/termreel.ts --version
+          bun bin/termreel.ts init /tmp/demo.reel
+          bun bin/termreel.ts compile /tmp/demo.reel --out /tmp/sb.json
