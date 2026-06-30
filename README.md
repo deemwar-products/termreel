@@ -162,9 +162,39 @@ never invents commands — it only types what the file's author wrote — but th
 means building an untrusted `.reel` runs *their* commands on *your* machine, just
 like piping a stranger's script into your shell. Skim it first.
 
+## Pro
+
+The CLI is **free and open (MIT)** — the `.reel` format, the narration + captions
+(the whole point), 1080p output, and demos up to 8 beats are yours forever, for
+personal, open-source, educational, and internal use. You can self-host the entire
+render stack with your own keys and never need us.
+
+A one-time **$49 lifetime Pro** license adds the polish + the rights to sell your work:
+
+| | Free | Pro — $49 once |
+|---|---|---|
+| Narration + captions | ✅ | ✅ |
+| Resolution | up to 1080p | **4K / custom** |
+| Voice | default Gemini | **premium voices + branded clone** |
+| Brand theme | default | **custom** |
+| Length | up to 8 beats / 90s | **unlimited** |
+| Watermark | tasteful outro badge | **removable** |
+| Usage | personal / OSS / internal | **commercial + white-label** |
+
+```sh
+termreel license activate <key>     # install your Pro key
+termreel license status             # show your tier + entitlements
+termreel license deactivate         # revert to free
+```
+
+Pro funds maintenance and the AI-voice/render API bills. Grab a license at
+**[deemwar.com/contact](https://deemwar.com/contact)**.
+
 ## License
 
-MIT licensed.
+The **termreel CLI is MIT** (see `LICENSE`). A **Pro license** (above) grants
+additional features and commercial-use rights; free-tier output is for personal,
+open-source, educational, and internal use.
 
 ---
 

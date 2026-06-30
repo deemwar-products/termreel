@@ -4,3 +4,7 @@ demo/
 *.mp4
 .DS_Store
 *.log
+# license signing material — NEVER commit
+*.pem
+.termreel-license-keys/
+license.json

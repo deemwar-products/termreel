@@ -28,12 +28,16 @@ export interface RenderOpts {
   storyboardPath: string;
   workdir: string;
   house: boolean;
+  /** Burn the "Made with termreel" outro badge. Free: true. Pro (nowatermark): false. */
+  watermark?: boolean;
 }
 
 /** Run produce.ts; streams its output to our stdout. Returns the final.mp4 path on success. */
 export async function render(opts: RenderOpts): Promise<string> {
   const args = [opts.producePath, opts.storyboardPath, "--workdir", opts.workdir];
   if (opts.house) args.push("--house");
+  // Pro can drop the watermark; produce.ts honors --no-watermark.
+  if (opts.watermark === false) args.push("--no-watermark");
 
   const proc = Bun.spawn(["bun", ...args], { stdout: "inherit", stderr: "inherit" });
   const code = await proc.exited;

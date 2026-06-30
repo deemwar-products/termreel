@@ -18,6 +18,8 @@ import { resolve, join, basename, dirname } from "node:path";
 import { parseReel } from "../src/parse.ts";
 import { compile } from "../src/compile.ts";
 import { locateProduce, render } from "../src/render.ts";
+import { activate, deactivate, loadLicense, loadEntitlements } from "../src/license.ts";
+import { applyTier, watermarkEnabled } from "../src/tier.ts";
 
 const VERSION = "0.1.0";
 
@@ -29,6 +31,7 @@ USAGE
   termreel init [name]              write a starter <name>.reel you can edit
   termreel compile <file.reel>     compile to a storyboard JSON (prints, or --out)
   termreel build   <file.reel>     render the narrated + captioned .mp4
+  termreel license <activate|status|deactivate> [key]
 
 BUILD OPTIONS
   -o, --out <file>     copy the finished mp4 here (default: ./<name>.mp4)
@@ -39,6 +42,14 @@ BUILD OPTIONS
 
 COMPILE OPTIONS
   -o, --out <file>     write the storyboard JSON here instead of stdout
+
+PRO
+  The CLI is free and open (MIT). A one-time $49 Pro license unlocks 4K, premium
+  AI voices, custom brand themes, unlimited length, watermark removal + commercial
+  use. Free renders up to 1080p / 8 beats. Manage your license:
+    termreel license activate <key>     install a Pro license key
+    termreel license status             show your tier + entitlements
+    termreel license deactivate         revert to the free tier
 
 A .reel script:
   name: my-demo
@@ -92,6 +103,18 @@ function loadScript(file: string) {
   }
 }
 
+/**
+ * Apply the active license tier to a script before compiling. Prints any free-tier
+ * warnings to stderr (so piped storyboard JSON on stdout stays clean) and returns
+ * the tier-adjusted script. Missing/invalid license → free tier, never fails.
+ */
+function gateScript(script: ReturnType<typeof loadScript>) {
+  const ent = loadEntitlements();
+  const { script: adjusted, warnings } = applyTier(script, ent);
+  for (const w of warnings) console.error(`termreel: ${w}`);
+  return adjusted;
+}
+
 const STARTER = (name: string) => `# ${name}.reel — a narrated, captioned terminal demo
 # Each "run:" is one beat. "say:" is spoken; "caption:" is shown on screen.
 # Render it:  termreel build ${name}.reel
@@ -123,8 +146,42 @@ async function main() {
     return;
   }
 
+  if (cmd === "license") {
+    const sub = positionals[1];
+    if (sub === "activate") {
+      const key = positionals[2];
+      if (!key) fail("usage: termreel license activate <key>");
+      let payload;
+      try {
+        payload = activate(key);
+      } catch {
+        fail("invalid license key — check for copy/paste errors, or buy at deemwar.com/contact");
+      }
+      console.log(
+        `Pro activated for ${payload.email} — ${payload.features.join(", ")}.`
+      );
+      return;
+    }
+    if (sub === "status") {
+      const lic = loadLicense();
+      if (!lic) {
+        console.log("Free tier — no Pro license installed.\n  Pro ($49, once) unlocks 4K, premium voices, brand themes, unlimited length, and commercial use → deemwar.com/contact");
+        return;
+      }
+      console.log(
+        `Pro — ${lic.email}\n  features: ${lic.features.join(", ")}\n  expires: ${lic.exp ? new Date(lic.exp * 1000).toISOString() : "never (lifetime)"}`
+      );
+      return;
+    }
+    if (sub === "deactivate") {
+      console.log(deactivate() ? "Reverted to the free tier." : "No license installed — already on the free tier.");
+      return;
+    }
+    fail("usage: termreel license <activate <key> | status | deactivate>");
+  }
+
   if (cmd === "compile") {
-    const script = loadScript(positionals[1]);
+    const script = gateScript(loadScript(positionals[1]));
     const sb = compile(script);
     const json = JSON.stringify(sb, null, 2);
     if (flags.out) {
@@ -138,7 +195,7 @@ async function main() {
 
   if (cmd === "build") {
     const file = positionals[1];
-    const script = loadScript(file);
+    const script = gateScript(loadScript(file));
     const sb = compile(script);
 
     const beats = sb.timeline.filter((t) => t.startsWith("vhs:")).length;
@@ -175,6 +232,7 @@ async function main() {
       storyboardPath: sbPath,
       workdir,
       house: !flags.plain,
+      watermark: watermarkEnabled(loadEntitlements()),
     });
 
     const outPath = resolve(flags.out ?? `${sb.name}.mp4`);
